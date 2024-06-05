@@ -11,14 +11,21 @@ let g:loaded_tranquille = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-if mapcheck('g/') ==# '' && !hasmapto('<Plug>(tranquille_search)')
-    nmap <unique> g/ <Plug>(tranquille_search)
-endif
+"if mapcheck('g/') ==# '' && !hasmapto('<Plug>(tranquille_search)')
+"    nmap <unique> g/ <Plug>(tranquille_search)
+"endif
 
-nnoremap <silent> <Plug>(tranquille_search) :TranquilleSearch<CR>
+nnoremap <silent> <Plug>(tranquille_search) :TranquilleSearchDown<CR>
+nnoremap <silent> <Plug>(tranquille_search) :TranquilleSearchUp<CR>
 
-command! -nargs=0 TranquilleSearch
-            \ let result = <SID>tranquille_search()
+command! -nargs=0 TranquilleSearchDown
+            \ let result = <SID>tranquille_search_down()
+            \ | if result
+                \ | set hls
+                \ | endif
+
+command! -nargs=0 TranquilleSearchUp
+            \ let result = <SID>tranquille_search_up()
             \ | if result
                 \ | set hls
                 \ | endif
@@ -37,13 +44,39 @@ fun! s:delete_match() abort
     endtry
 endfun
 
-fun! s:tranquille_search()
+fun! s:tranquille_search_down()
     nohls
     augroup tranquille_textwatcher
         autocmd!
         autocmd CmdlineChanged * call s:update_hl()
     augroup END
     let search = input('/')
+    augroup tranquille_textwatcher
+        autocmd!
+    augroup END
+    if search !=# ''
+        let @/ = search
+        redraw
+        try
+            if search(search, 'n') == 0
+                echohl ErrorMsg | echo 'E486: Pattern not found: '.search | echohl None
+            endif
+        catch /.*/
+            echohl ErrorMsg | echom 'Error with search term: '.search | echohl None
+        endtry
+        return 1
+    else
+        return 0
+    endif
+endf
+
+fun! s:tranquille_search_up()
+    nohls
+    augroup tranquille_textwatcher
+        autocmd!
+        autocmd CmdlineChanged * call s:update_hl()
+    augroup END
+    let search = input('?')
     augroup tranquille_textwatcher
         autocmd!
     augroup END
