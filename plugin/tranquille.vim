@@ -15,8 +15,8 @@ set cpoptions&vim
 "    nmap <unique> g/ <Plug>(tranquille_search)
 "endif
 
-nnoremap <silent> <Plug>(tranquille_search) :TranquilleSearchDown<CR>
-nnoremap <silent> <Plug>(tranquille_search) :TranquilleSearchUp<CR>
+nnoremap <silent> <Plug>(tranquille_search_down) :TranquilleSearchDown<CR>
+nnoremap <silent> <Plug>(tranquille_search_up) :TranquilleSearchUp<CR>
 
 command! -nargs=0 TranquilleSearchDown
             \ let result = <SID>tranquille_search_down()
