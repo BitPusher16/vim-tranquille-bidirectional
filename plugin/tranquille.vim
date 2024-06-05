@@ -58,6 +58,8 @@ fun! s:tranquille_search_down()
         let @/ = search
         redraw
         try
+            " maybe a good idea to set timeout on this search.
+            " https://vimdoc.sourceforge.net/htmldoc/eval.html#functions
             if search(search, 'n') == 0
                 echohl ErrorMsg | echo 'E486: Pattern not found: '.search | echohl None
             endif
