@@ -78,7 +78,7 @@ fun! s:tranquille_search_up()
         autocmd!
         autocmd CmdlineChanged * call s:update_hl()
     augroup END
-    let search = reverse(input('?'))
+    let search = input('?')
     augroup tranquille_textwatcher
         autocmd!
     augroup END
